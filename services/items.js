@@ -24,14 +24,17 @@ class ItemsService {
                 category_id,
                 condition,
                 id,
-                thumbnail,
-                shipping: { free_shipping },
                 installments: { currency_id, amount, rate },
+                shipping: { free_shipping },
+                thumbnail,
+                title,
             }) => {
                 categories.push(category_id);
                 itemsList.push({
                     id,
                     condition,
+                    title,
+                    category_id,
                     picture: thumbnail,
                     price: {
                         currency: currency_id,
@@ -61,13 +64,16 @@ class ItemsService {
         const { data: generalData } = await axios.get(`${MAIN_URL}items/${itemId}`);
         const { data: description } = await axios.get(`${MAIN_URL}items/${itemId}/description`);
         const {
+            category_id,
             condition,
-            id,
-            title,
-            thumbnail,
             currency_id,
+            id,
+            pictures,
+            price,
             shipping: { free_shipping },
             sold_quantity,
+            title,
+            thumbnail,
         } = generalData;
         const { plain_text } = description;
         if (!generalData || !description) throw boom.notFound('Data not found');
@@ -75,9 +81,11 @@ class ItemsService {
             id,
             condition,
             free_shipping,
-            picture: thumbnail,
+            category_id,
+            picture: pictures[0].url ?? thumbnail,
             price: {
                 currency: currency_id,
+                amount: price,
             },
             title,
             sold_quantity,

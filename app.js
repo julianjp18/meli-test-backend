@@ -5,12 +5,13 @@ const cors = require('cors');
 const routerApi = require('./routes');
 const { boomErrorFormat, logs, sendError } = require('./middleware/errorHandler');
 
-const ALLOWED_ORIGINS = ['http://localhost:3000'];
-
 const app = express();
-    
+
 app.use(helmet());
 
+app.use(cors());
+/* IF THE PROJECT NEED ALLOWED ONLY SPEFICIFS PATHS. FOR TESTING PORPOUSE I DISABLED THIS.
+const ALLOWED_ORIGINS = ['http://localhost:3000'];
 app.use(cors({
     origin: function(origin, callback){
         if (!origin) return callback(null, true);
@@ -21,6 +22,7 @@ app.use(cors({
         return callback(null, true);
     }
 }));
+*/
 app.use(express.static("client"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
